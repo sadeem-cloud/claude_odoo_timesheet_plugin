@@ -8,8 +8,5 @@
   },
   "repository": "https://github.com/sadeem-cloud/claude_odoo_timesheet_plugin",
   "license": "MIT",
-  "keywords": ["odoo", "timesheet", "project", "time-tracking"],
-  "commands": ["commands"],
-  "skills": ["skills"],
-  "hooks": ["hooks/hooks.json"]
+  "keywords": ["odoo", "timesheet", "project", "time-tracking"]
 }
