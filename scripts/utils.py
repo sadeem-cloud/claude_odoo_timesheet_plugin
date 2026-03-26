@@ -70,14 +70,22 @@ DEFAULTS = {
 def load_config() -> dict:
     if not CONFIG_PATH.exists():
         CONFIG_PATH.write_text(json.dumps(DEFAULTS, indent=2))
-    cfg = json.loads(CONFIG_PATH.read_text())
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text())
+    except json.JSONDecodeError:
+        # Corrupted file — reset to defaults and continue
+        cfg = {}
     for k, v in DEFAULTS.items():
         cfg.setdefault(k, v)
     return cfg
 
 
 def save_config(cfg: dict):
-    CONFIG_PATH.write_text(json.dumps(cfg, indent=2))
+    # Atomic write: write to a temp file then rename to avoid corruption
+    # when multiple processes write simultaneously
+    tmp = CONFIG_PATH.with_suffix('.tmp')
+    tmp.write_text(json.dumps(cfg, indent=2))
+    tmp.replace(CONFIG_PATH)
 
 
 def is_config_valid(cfg: dict) -> tuple[bool, list]:
