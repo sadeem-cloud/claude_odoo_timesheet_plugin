@@ -6,7 +6,7 @@ Auto-log your Claude Code sessions as Odoo timesheets. Tracks time spent, token 
 
 ```bash
 # From GitHub (once published)
-/plugin marketplace add https://github.com/crevisoft/odoo-timesheet-plugin.git
+/plugin marketplace add https://github.com/sadeem-cloud/odoo-timesheet-plugin.git
 /plugin install odoo-timesheet
 
 # Local install (for development)
