@@ -9,16 +9,45 @@ from pathlib import Path
 from datetime import datetime
 
 # ----------------------------------------------------------------
-# Paths — use CLAUDE_PLUGIN_DATA if available (persistent per plugin)
+# Paths
+#
+# Config is project-scoped:
+#   $CLAUDE_PROJECT_DIR/.claude/odoo-timesheet/config.json
+# falling back to the global data dir when no project dir is set.
+#
+# Runtime state (session, pending) always lives in the global dir
+# so it survives across working directories within one session.
 # ----------------------------------------------------------------
 
-_data_dir = Path(os.environ.get('CLAUDE_PLUGIN_DATA',
-                                Path.home() / '.claude' / 'plugins' / 'data' / 'odoo-timesheet'))
-_data_dir.mkdir(parents=True, exist_ok=True)
+_global_data_dir = Path(os.environ.get('CLAUDE_PLUGIN_DATA',
+                                       Path.home() / '.claude' / 'plugins' / 'data' / 'odoo-timesheet'))
+_global_data_dir.mkdir(parents=True, exist_ok=True)
 
-CONFIG_PATH   = _data_dir / 'config.json'
-SESSION_FILE  = _data_dir / '.session.json'
-PENDING_FILE  = _data_dir / '.pending.json'
+# Project-scoped config dir: use cwd's .claude/odoo-timesheet/ if it
+# looks like a project root (has a .git or .claude dir), otherwise fall
+# back to the global dir.
+def _resolve_config_dir() -> Path:
+    project_dir = os.environ.get('CLAUDE_PROJECT_DIR', '')
+    if project_dir:
+        d = Path(project_dir) / '.claude' / 'odoo-timesheet'
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+    # Auto-detect: walk up from cwd looking for .git or .claude
+    cwd = Path.cwd()
+    for candidate in [cwd, *cwd.parents]:
+        if (candidate / '.git').exists() or (candidate / '.claude').exists():
+            d = candidate / '.claude' / 'odoo-timesheet'
+            d.mkdir(parents=True, exist_ok=True)
+            return d
+    return _global_data_dir
+
+
+_config_dir  = _resolve_config_dir()
+CONFIG_PATH  = _config_dir / 'config.json'
+
+# Runtime state stays global (shared across all projects in a session)
+SESSION_FILE = _global_data_dir / '.session.json'
+PENDING_FILE = _global_data_dir / '.pending.json'
 
 # ----------------------------------------------------------------
 # Config
@@ -34,6 +63,7 @@ DEFAULTS = {
     "ai_matching": "claude_code",   # "claude_code" | "keyword"
     "auto_create_task": True,
     "min_duration_seconds": 30,
+    "scripts_path": str(Path(__file__).parent),  # path to plugin scripts dir
 }
 
 

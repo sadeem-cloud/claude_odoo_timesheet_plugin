@@ -35,12 +35,17 @@ print(f"Config saved to: {CONFIG_PATH}")
 EOF
 ```
 
-3. Then test the connection:
+3. Register the hooks into ~/.claude/settings.json (so sessions are tracked automatically):
+```bash
+CLAUDE_PLUGIN_ROOT="$CLAUDE_PLUGIN_ROOT" python3 "$CLAUDE_PLUGIN_ROOT/scripts/install_hooks.py"
+```
+
+4. Then test the connection:
 ```bash
 python3 "$CLAUDE_PLUGIN_ROOT/scripts/test_connection.py"
 ```
 
-4. Confirm to the user what was saved and whether the connection test passed.
+5. Confirm to the user what was saved, whether hooks were registered, and whether the connection test passed.
 
 **Config options:**
 - `ai_matching`: `"claude_code"` (default, uses AI to match tasks) or `"keyword"` (fast offline matching)

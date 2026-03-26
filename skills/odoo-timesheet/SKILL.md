@@ -29,7 +29,16 @@ This plugin automatically logs Claude Code sessions as Odoo timesheets.
 - `/odoo-timesheet:log` — manually trigger logging for current session
 
 ## Config location
-`~/.claude/plugins/data/odoo-timesheet/config.json`
+
+Config is **project-scoped** — stored in the project's `.claude/odoo-timesheet/config.json`.
+Each project can have its own Odoo connection and project ID.
+
+Resolution order:
+1. `$CLAUDE_PROJECT_DIR/.claude/odoo-timesheet/config.json` (if env var set)
+2. Auto-detect: walks up from cwd to find a directory containing `.git` or `.claude`, uses `<that dir>/.claude/odoo-timesheet/config.json`
+3. Global fallback: `~/.claude/plugins/data/odoo-timesheet/config.json`
+
+Runtime state (active session, pending log) always uses the global dir.
 
 ## Config options
 
@@ -44,6 +53,7 @@ This plugin automatically logs Claude Code sessions as Odoo timesheets.
 | `ai_matching` | `claude_code` or `keyword` | `claude_code` |
 | `auto_create_task` | Create task if no match | true |
 | `min_duration_seconds` | Minimum session to log | 30 |
+| `scripts_path` | Path to plugin scripts dir | auto-detected |
 
 ## Troubleshooting
 
