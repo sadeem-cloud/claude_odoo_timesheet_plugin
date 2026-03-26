@@ -21,7 +21,8 @@ If that script doesn't support --setup flags, save directly:
 ```bash
 python3 - <<EOF
 import sys, os, json
-sys.path.insert(0, os.environ['CLAUDE_PLUGIN_ROOT'] + '/scripts')
+plugin_root = os.environ.get('CLAUDE_PLUGIN_ROOT', '')
+sys.path.insert(0, plugin_root + '/scripts')
 from utils import load_config, save_config, CONFIG_PATH
 
 cfg = load_config()
@@ -30,8 +31,11 @@ cfg['odoo_db'] = '<DB>'
 cfg['odoo_user'] = '<USER>'
 cfg['odoo_password'] = '<PASSWORD>'
 cfg['project_id'] = <PROJECT_ID>
+if plugin_root:
+    cfg['scripts_path'] = plugin_root + '/scripts'
 save_config(cfg)
 print(f"Config saved to: {CONFIG_PATH}")
+print(f"scripts_path: {cfg.get('scripts_path', 'not set')}")
 EOF
 ```
 

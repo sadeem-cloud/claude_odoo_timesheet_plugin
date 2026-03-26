@@ -49,6 +49,21 @@ def hook_already_registered(hook_list: list, script_name: str) -> bool:
     return False
 
 
+def update_scripts_path():
+    """Persist PLUGIN_ROOT/scripts into the project config so scripts can be found later."""
+    scripts_path = str(Path(PLUGIN_ROOT) / 'scripts')
+    try:
+        sys.path.insert(0, scripts_path)
+        from utils import load_config, save_config
+        cfg = load_config()
+        if cfg.get('scripts_path') != scripts_path:
+            cfg['scripts_path'] = scripts_path
+            save_config(cfg)
+            print(f'  [odoo-timesheet] ✓ scripts_path set to: {scripts_path}')
+    except Exception as e:
+        print(f'  [odoo-timesheet] ⚠ Could not update scripts_path: {e}')
+
+
 def main():
     settings = load_settings()
     hooks = settings.setdefault('hooks', {})
@@ -73,6 +88,8 @@ def main():
             print(f'  [odoo-timesheet] ✓ Registered {event} hook in {SETTINGS_PATH}')
     else:
         print(f'  [odoo-timesheet] Hooks already registered — nothing to do.')
+
+    update_scripts_path()
 
 
 if __name__ == '__main__':
