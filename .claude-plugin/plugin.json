@@ -1,6 +1,6 @@
 {
   "name": "odoo-timesheet",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Auto-log Claude Code sessions as Odoo timesheets. Tracks time, tokens, and matches tasks using AI.",
   "author": {
     "name": "Sadeem Cloud",
