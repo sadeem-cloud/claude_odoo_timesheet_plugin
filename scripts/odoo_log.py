@@ -12,7 +12,7 @@ import json
 
 sys.path.insert(0, os.path.dirname(__file__))
 from utils import (load_config, is_config_valid, load_pending, clear_pending,
-                   read_hook_stdin)
+                   read_hook_stdin, make_task_name)
 from odoo_connector import OdooConnector
 
 
@@ -62,9 +62,9 @@ def main():
 
     try:
         if not task_id:
-            task_id = odoo.create_task(pending['project_id'],
-                                       task_name_new or pending['task_description'][:80])
-            print(f"[odoo-timesheet] ✓ Created task [{task_id}] {task_name_new}")
+            name = make_task_name(cfg, task_name_new or pending['task_description'][:80])
+            task_id = odoo.create_task(pending['project_id'], name)
+            print(f"[odoo-timesheet] ✓ Created task [{task_id}] {name}")
 
         ts_id = odoo.create_timesheet(
             task_id=task_id,

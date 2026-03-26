@@ -53,6 +53,7 @@ Resolution order:
 | `ai_matching` | `"claude_code"` (AI) or `"keyword"` (offline) | `"claude_code"` |
 | `auto_create_task` | Create a new task if nothing matches | true |
 | `min_duration_seconds` | Minimum session length to log | 30 |
+| `task_name_prefix` | Prefix added to auto-created task names (e.g. `[Claude] `) | `""` |
 
 ## Commands
 

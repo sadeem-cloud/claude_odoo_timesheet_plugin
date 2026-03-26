@@ -12,7 +12,8 @@ import difflib
 sys.path.insert(0, os.path.dirname(__file__))
 from utils import (load_config, save_config, is_config_valid,
                    load_session, clear_session, write_pending,
-                   read_hook_stdin, extract_last_user_message, extract_tokens)
+                   read_hook_stdin, extract_last_user_message, extract_tokens,
+                   make_task_name)
 from odoo_connector import OdooConnector
 
 PLUGIN_ROOT = os.environ.get('CLAUDE_PLUGIN_ROOT', os.path.dirname(os.path.dirname(__file__)))
@@ -136,7 +137,7 @@ def _keyword_match_and_log(odoo, tasks, cfg, description,
 
     if not task_id:
         if cfg.get('auto_create_task'):
-            task_name_new = description[:80]
+            task_name_new = make_task_name(cfg, description[:80])
         else:
             print("[odoo-timesheet] No match, auto_create_task=false. Skipping.")
             clear_pending()

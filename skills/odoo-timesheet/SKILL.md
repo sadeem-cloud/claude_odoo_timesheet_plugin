@@ -53,6 +53,7 @@ Runtime state (active session, pending log) always uses the global dir.
 | `ai_matching` | `claude_code` or `keyword` | `claude_code` |
 | `auto_create_task` | Create task if no match | true |
 | `min_duration_seconds` | Minimum session to log | 30 |
+| `task_name_prefix` | Prefix added to auto-created task names (e.g. `[Claude] `) | `""` |
 | `scripts_path` | Path to plugin scripts dir | auto-detected |
 
 ## Troubleshooting

@@ -63,6 +63,7 @@ DEFAULTS = {
     "ai_matching": "claude_code",   # "claude_code" | "keyword"
     "auto_create_task": True,
     "min_duration_seconds": 30,
+    "task_name_prefix": "",  # prepended to auto-created task names e.g. "[Claude] "
     "scripts_path": str(Path(__file__).parent),  # path to plugin scripts dir
 }
 
@@ -86,6 +87,11 @@ def save_config(cfg: dict):
     tmp = CONFIG_PATH.with_suffix('.tmp')
     tmp.write_text(json.dumps(cfg, indent=2))
     tmp.replace(CONFIG_PATH)
+
+
+def make_task_name(cfg: dict, name: str) -> str:
+    prefix = cfg.get('task_name_prefix', '')
+    return f"{prefix}{name}" if prefix else name
 
 
 def is_config_valid(cfg: dict) -> tuple[bool, list]:
