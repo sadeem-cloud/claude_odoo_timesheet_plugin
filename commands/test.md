@@ -4,7 +4,7 @@ description: Test the Odoo connection and show available tasks in the configured
 
 Test the Odoo connection by running:
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/test_connection.py
+python3 "$CLAUDE_PLUGIN_ROOT/scripts/test_connection.py"
 ```
 
 Show the output to the user. If it succeeds, summarise:

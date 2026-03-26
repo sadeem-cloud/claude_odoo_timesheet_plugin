@@ -6,7 +6,10 @@
     "name": "Sadeem Cloud",
     "url": "https://sadeem.cloud"
   },
-  "repository": "https://github.com/sadeemcloud/odoo-timesheet-plugin",
+  "repository": "https://github.com/sadeem-cloud/claude_odoo_timesheet_plugin",
   "license": "MIT",
-  "keywords": ["odoo", "timesheet", "project", "time-tracking"]
+  "keywords": ["odoo", "timesheet", "project", "time-tracking"],
+  "commands": "commands",
+  "skills": "skills",
+  "hooks": "hooks/hooks.json"
 }

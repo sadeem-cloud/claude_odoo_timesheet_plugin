@@ -6,7 +6,7 @@ Log the current Claude Code session as a timesheet entry in Odoo.
 
 Run:
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/session_stop.py
+python3 "$CLAUDE_PLUGIN_ROOT/scripts/session_stop.py"
 ```
 
 This will:
@@ -17,6 +17,6 @@ This will:
 
 After I show you the task list and you confirm a match, I'll call:
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/odoo_log.py
+python3 "$CLAUDE_PLUGIN_ROOT/scripts/odoo_log.py"
 ```
 to finalise the entry.

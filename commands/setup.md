@@ -11,16 +11,17 @@ Help the user configure the odoo-timesheet plugin by collecting the following in
    - `odoo_password` — Password or API key (Settings → Users → API Keys)
    - `project_id` — Project ID (found in the URL when viewing the project: /odoo/project/NUMBER)
 
-2. Once you have all values, run this command to save them:
+2. Once you have all values, save them by running (replace the placeholder values with what the user provided):
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/odoo_log.py
+python3 "$CLAUDE_PLUGIN_ROOT/scripts/odoo_log.py" --setup \
+  --url "<URL>" --db "<DB>" --user "<USER>" --password "<PASSWORD>" --project-id <PROJECT_ID>
 ```
 
-Actually, save by calling the setup script directly:
+If that script doesn't support --setup flags, save directly:
 ```bash
-python3 - <<'EOF'
+python3 - <<EOF
 import sys, os, json
-sys.path.insert(0, '${CLAUDE_PLUGIN_ROOT}/scripts')
+sys.path.insert(0, os.environ['CLAUDE_PLUGIN_ROOT'] + '/scripts')
 from utils import load_config, save_config, CONFIG_PATH
 
 cfg = load_config()
@@ -36,7 +37,7 @@ EOF
 
 3. Then test the connection:
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/test_connection.py
+python3 "$CLAUDE_PLUGIN_ROOT/scripts/test_connection.py"
 ```
 
 4. Confirm to the user what was saved and whether the connection test passed.

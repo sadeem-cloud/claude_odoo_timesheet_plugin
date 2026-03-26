@@ -16,7 +16,7 @@
       "description": "Auto-log Claude Code sessions as Odoo timesheets. Tracks time, tokens, and matches tasks using AI.",
       "source": {
         "source": "github",
-        "repo": "sadeemcloud/odoo-timesheet-plugin"
+        "repo": "sadeem-cloud/claude_odoo_timesheet_plugin"
       },
       "category": "productivity",
       "keywords": ["odoo", "timesheet", "time-tracking", "project"],
