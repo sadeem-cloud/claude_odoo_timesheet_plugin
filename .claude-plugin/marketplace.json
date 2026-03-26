@@ -1,12 +1,29 @@
 {
-  "name": "odoo-timesheet",
-  "version": "1.0.0",
-  "description": "Auto-log Claude Code sessions as Odoo timesheets. Tracks time, tokens, and matches tasks using AI.",
-  "author": {
+  "name": "sadeem-marketplace",
+  "owner": {
     "name": "Sadeem Cloud",
+    "email": "info@sadeem.cloud",
     "url": "https://sadeem.cloud"
   },
-  "repository": "https://github.com/sadeemcloud/odoo-timesheet-plugin",
-  "license": "MIT",
-  "keywords": ["odoo", "timesheet", "project", "time-tracking"]
+  "metadata": {
+    "description": "Sadeem Cloud plugins for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "odoo-timesheet",
+      "version": "1.0.0",
+      "description": "Auto-log Claude Code sessions as Odoo timesheets. Tracks time, tokens, and matches tasks using AI.",
+      "source": {
+        "source": "github",
+        "repo": "sadeemcloud/odoo-timesheet-plugin"
+      },
+      "category": "productivity",
+      "keywords": ["odoo", "timesheet", "time-tracking", "project"],
+      "author": {
+        "name": "Sadeem Cloud",
+        "url": "https://sadeem.cloud"
+      }
+    }
+  ]
 }
