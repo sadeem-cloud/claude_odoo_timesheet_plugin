@@ -4,9 +4,14 @@ description: Manually log current session as an Odoo timesheet entry
 
 Log the current Claude Code session as a timesheet entry in Odoo.
 
-Run:
+First, resolve the scripts path from config:
 ```bash
-python3 "$CLAUDE_PLUGIN_ROOT/scripts/session_stop.py"
+SCRIPTS=$(python3 -c "import json,pathlib; p=next((c/'.claude'/'odoo-timesheet'/'config.json' for c in [pathlib.Path.cwd(),*pathlib.Path.cwd().parents] if (c/'.claude'/'odoo-timesheet'/'config.json').exists()), pathlib.Path.home()/'.claude'/'plugins'/'data'/'odoo-timesheet'/'config.json'); print(json.loads(p.read_text())['scripts_path'])")
+```
+
+Then run:
+```bash
+python3 "$SCRIPTS/session_stop.py"
 ```
 
 **If the output says "Session too short or no active session"**, ask the user:
@@ -14,7 +19,7 @@ python3 "$CLAUDE_PLUGIN_ROOT/scripts/session_stop.py"
 
 Then re-run with the duration they provide:
 ```bash
-python3 "$CLAUDE_PLUGIN_ROOT/scripts/session_stop.py" --duration <MINUTES>
+python3 "$SCRIPTS/session_stop.py" --duration <MINUTES>
 ```
 
 This will:
@@ -25,7 +30,7 @@ This will:
 
 After I show you the task list and you confirm a match, I'll call:
 ```bash
-python3 "$CLAUDE_PLUGIN_ROOT/scripts/odoo_log.py"
+echo '<JSON_RESPONSE>' | python3 "$SCRIPTS/odoo_log.py"
 ```
 to finalise the entry.
 
