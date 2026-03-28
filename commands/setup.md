@@ -11,18 +11,20 @@ Help the user configure the odoo-timesheet plugin by collecting the following in
    - `odoo_password` — Password or API key (Settings → Users → API Keys)
    - `project_id` — Project ID (found in the URL when viewing the project: /odoo/project/NUMBER)
 
-2. Once you have all values, save them by running (replace the placeholder values with what the user provided):
-```bash
-python3 "$CLAUDE_PLUGIN_ROOT/scripts/odoo_log.py" --setup \
-  --url "<URL>" --db "<DB>" --user "<USER>" --password "<PASSWORD>" --project-id <PROJECT_ID>
-```
-
-If that script doesn't support --setup flags, save directly:
+2. Once you have all values, save them directly:
 ```bash
 python3 - <<EOF
-import sys, os, json
-plugin_root = os.environ.get('CLAUDE_PLUGIN_ROOT', '')
-sys.path.insert(0, plugin_root + '/scripts')
+import sys, json, pathlib
+
+# Find config path
+cwd = pathlib.Path.cwd()
+config_path = next(
+    (c / '.claude' / 'odoo-timesheet' / 'config.json'
+     for c in [cwd, *cwd.parents]
+     if (c / '.claude' / 'odoo-timesheet' / 'config.json').exists()),
+    pathlib.Path.home() / '.claude' / 'plugins' / 'data' / 'odoo-timesheet' / 'config.json'
+)
+sys.path.insert(0, str(config_path.parent.parent.parent / 'scripts') if 'plugins/data' not in str(config_path) else str(config_path.parent))
 from utils import load_config, save_config, CONFIG_PATH
 
 cfg = load_config()
@@ -31,8 +33,6 @@ cfg['odoo_db'] = '<DB>'
 cfg['odoo_user'] = '<USER>'
 cfg['odoo_password'] = '<PASSWORD>'
 cfg['project_id'] = <PROJECT_ID>
-if plugin_root:
-    cfg['scripts_path'] = plugin_root + '/scripts'
 save_config(cfg)
 print(f"Config saved to: {CONFIG_PATH}")
 print(f"scripts_path: {cfg.get('scripts_path', 'not set')}")
@@ -41,12 +41,13 @@ EOF
 
 3. Register the hooks into ~/.claude/settings.json (so sessions are tracked automatically):
 ```bash
-CLAUDE_PLUGIN_ROOT="$CLAUDE_PLUGIN_ROOT" python3 "$CLAUDE_PLUGIN_ROOT/scripts/install_hooks.py"
+SCRIPTS=$(python3 -c "import json,pathlib; p=next((c/'.claude'/'odoo-timesheet'/'config.json' for c in [pathlib.Path.cwd(),*pathlib.Path.cwd().parents] if (c/'.claude'/'odoo-timesheet'/'config.json').exists()), pathlib.Path.home()/'.claude'/'plugins'/'data'/'odoo-timesheet'/'config.json'); print(json.loads(p.read_text())['scripts_path'])")
+python3 "$SCRIPTS/install_hooks.py"
 ```
 
 4. Then test the connection:
 ```bash
-python3 "$CLAUDE_PLUGIN_ROOT/scripts/test_connection.py"
+python3 "$SCRIPTS/test_connection.py"
 ```
 
 5. Confirm to the user what was saved, whether hooks were registered, and whether the connection test passed.

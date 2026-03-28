@@ -4,7 +4,8 @@ description: Test the Odoo connection and show available tasks in the configured
 
 Test the Odoo connection by running:
 ```bash
-python3 "$CLAUDE_PLUGIN_ROOT/scripts/test_connection.py"
+SCRIPTS=$(python3 -c "import json,pathlib; p=next((c/'.claude'/'odoo-timesheet'/'config.json' for c in [pathlib.Path.cwd(),*pathlib.Path.cwd().parents] if (c/'.claude'/'odoo-timesheet'/'config.json').exists()), pathlib.Path.home()/'.claude'/'plugins'/'data'/'odoo-timesheet'/'config.json'); print(json.loads(p.read_text())['scripts_path'])")
+python3 "$SCRIPTS/test_connection.py"
 ```
 
 Show the output to the user. If it succeeds, summarise:
