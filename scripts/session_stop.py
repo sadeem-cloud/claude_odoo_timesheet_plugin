@@ -8,6 +8,7 @@ import sys
 import os
 import time
 import difflib
+from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(__file__))
 from utils import (load_config, save_config, is_config_valid,
@@ -32,7 +33,25 @@ def main():
     session = load_session()
 
     # --- Duration ---
-    if session:
+    # Support manual invocation via --duration <minutes> or ODOO_DURATION_MINUTES env var
+    manual_minutes = None
+    if '--duration' in sys.argv:
+        idx = sys.argv.index('--duration')
+        if idx + 1 < len(sys.argv):
+            try:
+                manual_minutes = float(sys.argv[idx + 1])
+            except ValueError:
+                pass
+    if manual_minutes is None and os.environ.get('ODOO_DURATION_MINUTES'):
+        try:
+            manual_minutes = float(os.environ['ODOO_DURATION_MINUTES'])
+        except ValueError:
+            pass
+
+    if manual_minutes is not None:
+        duration_seconds = manual_minutes * 60
+        session_id = hook_data.get('session_id', datetime.now().strftime('%Y%m%d_%H%M%S'))
+    elif session:
         duration_seconds = time.time() - session['start_time']
         session_id = session.get('session_id', '')
     else:
@@ -40,8 +59,11 @@ def main():
         session_id = hook_data.get('session_id', '')
 
     if duration_seconds < cfg['min_duration_seconds']:
+        if not manual_minutes:
+            print(f"[odoo-timesheet] Session too short or no active session. "
+                  f"Use: python3 session_stop.py --duration <minutes>")
         clear_session()
-        return   # too short, skip silently
+        return
 
     duration_minutes = duration_seconds / 60
     tokens_used = extract_tokens(hook_data)
